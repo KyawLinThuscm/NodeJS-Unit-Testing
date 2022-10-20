@@ -1,6 +1,4 @@
 import express from "express";
-import path from "path";
-
 import router from "./api.js";
 
 const app = express();
