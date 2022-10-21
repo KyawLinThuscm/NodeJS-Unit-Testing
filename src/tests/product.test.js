@@ -11,6 +11,11 @@ export const productPayload = {
   description: "Description"
 };
 
+export const updateProductPayload = {
+  title: "Title Edit",
+  description: "Description"
+}
+
 describe("product", () => {
   beforeAll(async () => {
     const mongoServer = await MongoMemoryServer.create();
@@ -85,7 +90,23 @@ describe("product", () => {
   });
 
   describe("Update products route", () => {
-
+    test("Update", async() => {
+      const product = await createProduct(productPayload);
+      var { statusCode, body } = await supertest(app)
+        .put(`/api/products/${product.productId}`)
+        .send(updateProductPayload);
+      
+      expect(statusCode).toBe(200);
+      expect(body).toEqual({
+        __v: 0,
+        _id: expect.any(String),
+        createdAt: expect.any(String),
+        description: "Description",
+        productId: expect.any(String),
+        title: "Title Edit",
+        updatedAt: expect.any(String),
+      });
+    })
   });
 
   describe("Delete products route", () => {
@@ -94,7 +115,6 @@ describe("product", () => {
       const { statusCode } = await supertest(app).delete(
         `/api/products/${product.productId}`
       );
-
       expect(statusCode).toBe(200);
     });
   });

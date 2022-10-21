@@ -26,7 +26,7 @@ export async function updateProductHandler(req, res) {
   if (!product) {
     return res.sendStatus(404);
   }
-  const updatedProduct = await findAndUpdateProduct({ productId }, update, {
+  const updatedProduct = await findAndUpdateProduct({ productId }, update ,{
     new: true,
   });
   return res.send(updatedProduct);
