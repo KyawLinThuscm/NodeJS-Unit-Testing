@@ -1,11 +1,15 @@
-import { createProduct, findProduct } from "../services/product.service.js";
+import { createProduct, findProduct, findAndUpdateProduct, deleteProduct, findAll } from "../services/product.service.js";
 
-export async function createProductHandler(req,res) {
+export async function createProductHandler(req, res) {
   const body = req.body;
   const product = await createProduct({ ...body });
   return res.send(product);
 }
 
+export async function getAllProductHandler(req, res) {
+  const product = await findAll();
+  return res.send(product);
+}
 export async function getProductHandler(req, res) {
   const productId = req.params.productId;
   const product = await findProduct({ productId });
@@ -13,4 +17,27 @@ export async function getProductHandler(req, res) {
     return res.sendStatus(404);
   }
   return res.send(product);
+}
+
+export async function updateProductHandler(req, res) {
+  const productId = req.params.productId;
+  const update = req.body;
+  const product = await findProduct({ productId });
+  if (!product) {
+    return res.sendStatus(404);
+  }
+  const updatedProduct = await findAndUpdateProduct({ productId }, update, {
+    new: true,
+  });
+  return res.send(updatedProduct);
+}
+
+export async function deleteProductHandler(req, res) {
+  const productId = req.params.productId;
+  const product = await findProduct({ productId });
+  if (!product) {
+    return res.sendStatus(404);
+  }
+  await deleteProduct({ productId });
+  return res.sendStatus(200);
 }

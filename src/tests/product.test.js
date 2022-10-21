@@ -22,7 +22,7 @@ describe("product", () => {
     await mongoose.connection.close();
   });
 
-  describe("get product route", () => {
+  describe("Get products route", () => {
     describe("given the product does not exist", () => {
       test("should return a 404", async () => {
         const productId = "product-123";
@@ -31,31 +31,17 @@ describe("product", () => {
     });
 
     describe("given the product does exist", () => {
-      test("should return a 200 status and the product", async () => {
-        const product = await createProduct(productPayload);
-
-        const { body, statusCode } = await supertest(app).get(
-          `/api/products/${product.productId}`
-        );
-
-        expect(statusCode).toBe(200);
-
-        expect(body.productId).toBe(product.productId);
-      });
-    });
-  });
-
-  describe("create product route", () => {
-    describe("given the user is logged in", () => {
-      test("should return a 200 and create the product", async () => {
-
-        const { statusCode, body } = await supertest(app)
+      test("should return a 200 status and get all products", async () => {
+        var { statusCode } = await supertest(app)
           .post("/api/products")
           .send(productPayload);
-
         expect(statusCode).toBe(200);
 
-        expect(body).toEqual({
+        var { body, statusCode } = await supertest(app)
+          .get("/api/products");
+
+        expect(statusCode).toBe(200);
+        expect(body).toEqual([{
           __v: 0,
           _id: expect.any(String),
           createdAt: expect.any(String),
@@ -63,8 +49,53 @@ describe("product", () => {
           productId: expect.any(String),
           title: "Title",
           updatedAt: expect.any(String),
-        });
+        }]);
       });
+
+      test("should return a 200 status and get one product", async () => {
+        const product = await createProduct(productPayload);
+        const { body, statusCode } = await supertest(app).get(
+          `/api/products/${product.productId}`
+        );
+
+        expect(statusCode).toBe(200);
+        expect(body.productId).toBe(product.productId);
+      });
+    });
+  });
+
+  describe("Create products route", () => {
+    test("should return a 200 and create the product", async () => {
+      const { statusCode, body } = await supertest(app)
+        .post("/api/products")
+        .send(productPayload);
+
+      expect(statusCode).toBe(200);
+
+      expect(body).toEqual({
+        __v: 0,
+        _id: expect.any(String),
+        createdAt: expect.any(String),
+        description: "Description",
+        productId: expect.any(String),
+        title: "Title",
+        updatedAt: expect.any(String),
+      });
+    });
+  });
+
+  describe("Update products route", () => {
+
+  });
+
+  describe("Delete products route", () => {
+    test("should return a 200 status and delete one product", async () => {
+      const product = await createProduct(productPayload);
+      const { statusCode } = await supertest(app).delete(
+        `/api/products/${product.productId}`
+      );
+
+      expect(statusCode).toBe(200);
     });
   });
 });

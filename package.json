@@ -7,14 +7,6 @@
     "start": "nodemon --exec babel-node app",
     "test": "jest --forceExit"
   },
-  "jest": {
-    "collectCoverage": true,
-    "coverageReporters": [
-      "json",
-      "html",
-      "lcov"
-    ]
-  },
   "keywords": [],
   "author": "",
   "license": "ISC",
