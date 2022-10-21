@@ -6,15 +6,25 @@ import { createProduct } from "../services/product.service.js";
 
 const app = createServer();
 
+const userId = new mongoose.Types.ObjectId().toString();
+
 export const productPayload = {
+  user: userId,
   title: "Title",
   description: "Description"
 };
 
 export const updateProductPayload = {
+  user: userId,
   title: "Title Edit",
   description: "Description"
 }
+
+export const userPayload = {
+  _id: userId,
+  email: "jane.doe@example.com",
+  name: "Jane Doe",
+};
 
 describe("product", () => {
   beforeAll(async () => {
@@ -54,6 +64,7 @@ describe("product", () => {
           productId: expect.any(String),
           title: "Title",
           updatedAt: expect.any(String),
+          user: expect.any(String),
         }]);
       });
 
@@ -85,6 +96,7 @@ describe("product", () => {
         productId: expect.any(String),
         title: "Title",
         updatedAt: expect.any(String),
+        user: expect.any(String),
       });
     });
   });
@@ -92,6 +104,7 @@ describe("product", () => {
   describe("Update products route", () => {
     test("Update", async() => {
       const product = await createProduct(productPayload);
+        
       var { statusCode, body } = await supertest(app)
         .put(`/api/products/${product.productId}`)
         .send(updateProductPayload);
@@ -105,6 +118,7 @@ describe("product", () => {
         productId: expect.any(String),
         title: "Title Edit",
         updatedAt: expect.any(String),
+        user: expect.any(String),
       });
     })
   });

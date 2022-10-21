@@ -1,6 +1,12 @@
 import { createProductHandler, deleteProductHandler, getAllProductHandler, getProductHandler, updateProductHandler } from './controllers/product.controller.js';
+import { createUserHandler } from './controllers/user.controller.js';
 
 function routes(app) {
+  app.post(
+    "/api/users", 
+    createUserHandler
+  );
+  
   app.post(
     "/api/products",
     createProductHandler
